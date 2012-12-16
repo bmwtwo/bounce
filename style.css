@@ -1,0 +1,26 @@
+body {
+	margin: 0px;
+	text-align:center;
+}
+#player {
+	width: 1%;
+	height: 2%;
+	background-color: blue;
+	position:absolute;
+	left: 50%;
+	top: 50%;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+}
+.particle {
+	width: 0.5%;
+	height: 1%;
+	background-color: black;
+	position: absolute;
+	left: 20%;
+	top: 20%;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+}
