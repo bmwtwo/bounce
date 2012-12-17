@@ -1,29 +1,26 @@
-/*var count = 0;
-var margin = 0;
-var score = 0;
-var high_score = 0;
-var end = false;*/
+// record position and velocity
 var rightVel = 0;
 var downVel = 0;
 var rightPos = 50;
 var downPos = 50;
+// record which keyboard keys are currently pressed
 var leftDown = false;
 var rightDown = false;
 var downDown = false;
 var upDown = false;
 
 
-G = 0.1;
-lambda = 0.01; //damping constant
+G = 0.1;            // gravitational constant
+damping = 0.01;     // how quickly the particles slow down
 particleMass = 0.1; //relative to player
 
-k = 0.0005; //I leave out q as it's constant
+k = 0.0005;         // constant for electrical repulsion between particles
 
 function tick() {
 	setTimeout("tick()", 25);
 
 	movePlayer();
-	applyGravity();
+	applyForces();
 }
 
 function movePlayer() {
@@ -68,8 +65,9 @@ function movePlayer() {
 		downVel += 0.05;
 }
 
-function applyGravity() {
-	//alert((G * particleMass * (rightPos - pRightPos)) + '\n' + ((Math.abs(rightPos - pRightPos))^3) + '\n' + (G * particleMass * (rightPos - pRightPos) / ((Math.abs(rightPos - pRightPos))^3)));
+function applyForces() {
+   // note: forces are applied to particles, but are assumed not to affect the
+   // player
 	
 	var particles = $('.particle');
 	particles.each(function() {
@@ -78,26 +76,26 @@ function applyGravity() {
 		pRightVel = parseFloat($(this).attr('rVel'));
 		pDownVel = parseFloat($(this).attr('dVel'));
 
-
+      // apply gravity
 		var denominator = (Math.abs(rightPos - pRightPos))^3;
+      // check if denominator is 0, which would result in infinite acceleration
 		if (denominator != 0)
 			pRightVel += G * particleMass * (rightPos - pRightPos) / denominator;
 		denominator = (Math.abs(downPos - pDownPos))^3;
 		if (denominator != 0)
 			pDownVel += G * particleMass * (downPos - pDownPos)/ denominator;
 
-		//alert('before: ' + pRightVel);
+      // apply repulsion
 		applyRepulsion($(this));
-		//alert('after: ' + pRightVel);
 
 		pRightPos += pRightVel;
-		pDownPos += pDownVel;
+		pDownPos  += pDownVel;
 
 		$(this).css({'top': pDownPos + "%", 'left': pRightPos + "%"});
 
-		// damping
+		// apply damping
 		pRightVel -= lambda * pRightVel;
-		pDownVel -= lambda * pDownVel;
+		pDownVel  -= lambda * pDownVel;
 
 		$(this).attr('rPos', pRightPos);
 		$(this).attr('dPos', pDownPos);
@@ -116,7 +114,6 @@ function applyRepulsion(particle) {
 
 		denominator = (Math.abs(tRightPos - oRightPos))^3;
 		if (denominator != 0) {
-			//alert('here?');
 			pRightVel += k * (tRightPos - oRightPos) / denominator;
 		}
 		denominator = (Math.abs(tDownPos - oDownPos))^3;
@@ -127,12 +124,13 @@ function applyRepulsion(particle) {
 
 $(document).ready(function() {
 
-	$('h1').fadeOut(5000);
-	tick();
+	$('h1').fadeOut(5000); // fade out instructions
+	tick();                // start game loop
 
+   // check for control keystrokes
 	$('body').keydown(function(e) {
 		switch (e['keyCode']) {
-			case 78:
+			case 78: // spawn a new particle
 				$(this).html($(this).html() + '<div class="particle" style="left:50%; top:50%" rVel="0" dVel="0" rPos="50" dPos="50" ></div>');
 				$('h1').hide();
 				break;
