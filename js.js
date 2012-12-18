@@ -94,8 +94,8 @@ function applyForces() {
 		$(this).css({'top': pDownPos + "%", 'left': pRightPos + "%"});
 
 		// apply damping
-		pRightVel -= lambda * pRightVel;
-		pDownVel  -= lambda * pDownVel;
+		pRightVel -= damping * pRightVel;
+		pDownVel  -= damping * pDownVel;
 
 		$(this).attr('rPos', pRightPos);
 		$(this).attr('dPos', pDownPos);
