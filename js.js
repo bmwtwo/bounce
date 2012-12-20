@@ -4,17 +4,17 @@ var downVel = 0;
 var rightPos = 50;
 var downPos = 50;
 // record which keyboard keys are currently pressed
-var leftDown = false;
-var rightDown = false;
-var downDown = false;
-var upDown = false;
+var leftPressed = false;
+var rightPressed = false;
+var downPressed = false;
+var upPressed = false;
 
 
-G = 0.1;            // gravitational constant
+G = 0.1;            // arbitrary gravitational constant
 damping = 0.01;     // how quickly the particles slow down
-particleMass = 0.1; //relative to player
+particleMass = 0.1; // mass of particles as a fraction of player's mass
 
-k = 0.0005;         // constant for electrical repulsion between particles
+k = 0.0005;         // constant for electrical-style repulsion between particles
 
 function tick() {
 	setTimeout("tick()", 25);
@@ -55,13 +55,13 @@ function movePlayer() {
 
 	$('#player').css({'top': downPos + "%", 'left': rightPos + "%"});
 
-	if (leftDown)
+	if (leftPressed)
 		rightVel -= 0.05;
-	if (rightDown)
+	if (rightPressed)
 		rightVel += 0.05;
-	if (upDown)
+	if (upPressed)
 		downVel -= 0.05;
-	if (downDown)
+	if (downPressed)
 		downVel += 0.05;
 }
 
@@ -85,7 +85,7 @@ function applyForces() {
 		if (denominator != 0)
 			pDownVel += G * particleMass * (downPos - pDownPos)/ denominator;
 
-      // apply repulsion
+      // apply repulsion between non-player particles
 		applyRepulsion($(this));
 
 		pRightPos += pRightVel;
@@ -136,34 +136,34 @@ $(document).ready(function() {
 				break;
 			case 65:
 				rightVel -= 0.1;
-				leftDown = true;
+				leftPressed = true;
 				break;
 			case 68:
 				rightVel += 0.1;
-				rightDown = true;
+				rightPressed = true;
 				break;
 			case 87:
 				downVel -= 0.1;
-				upDown = true;
+				upPressed = true;
 				break;
 			case 83:
 				downVel += 0.1;
-				downDown = true;
+				downPressed = true;
 				break;
 		}
 	}).keyup(function(e) {
 		switch (e['keyCode']) {
 			case 65:
-				leftDown = false;
+				leftPressed = false;
 				break;
 			case 68:
-				rightDown = false;
+				rightPressed = false;
 				break;
 			case 87:
-				upDown = false;
+				upPressed = false;
 				break;
 			case 83:
-				downDown = false;
+				downPressed = false;
 				break;
 		}
 	});
